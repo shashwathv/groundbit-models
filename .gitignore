@@ -15,9 +15,8 @@ build/
 # ── Credentials & Secrets ────────────────────────
 kaggle.json
 
-# ── Model Weights (too large for Git) ────────────
-models/*.pkl
-src/visual_model/*.h5
+# ── Model Weights (tracked via Git LFS) ──────────
+# models/*.pkl and src/visual_model/*.h5 are handled by LFS
 
 # ── Data files ───────────────────────────────────
 data/raw/
