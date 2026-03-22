@@ -1,0 +1,39 @@
+# ── Virtual Environments ──────────────────────────
+.venv*/
+venv*/
+env/
+
+# ── Python ────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── Credentials & Secrets ────────────────────────
+kaggle.json
+
+# ── Model Weights (too large for Git) ────────────
+models/*.pkl
+src/visual_model/*.h5
+
+# ── Data files ───────────────────────────────────
+data/raw/
+data/converted/
+data/datasets/
+
+# ── Outputs (regenerable) ────────────────────────
+outputs/
+
+# ── IDE / Editor ─────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── OS files ─────────────────────────────────────
+.DS_Store
+Thumbs.db
