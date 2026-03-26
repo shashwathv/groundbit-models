@@ -36,3 +36,11 @@ outputs/
 # ── OS files ─────────────────────────────────────
 .DS_Store
 Thumbs.db
+
+# ── Model Exports and Datasets ───────────────────
+*.mlpackage/
+src/visual_model/dataset/
+src/visual_model/plantvillage_new/
+*.zip
+src/visual_model/training_results.png
+photos/*.jpg
