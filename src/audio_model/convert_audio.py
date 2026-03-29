@@ -13,8 +13,8 @@ import sys
 from pydub import AudioSegment
 
 # ─── PATHS ────────────────────────────────────────────
-RAW_DIR       = os.path.join(os.path.dirname(__file__), '..', 'data', 'raw')
-CONVERTED_DIR = os.path.join(os.path.dirname(__file__), '..', 'data', 'converted')
+RAW_DIR       = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'raw')
+CONVERTED_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'converted')
 # ──────────────────────────────────────────────────────
 
 SUPPORTED = (".wav", ".mp3", ".ogg", ".flac", ".m4a", ".aac")

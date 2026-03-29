@@ -22,7 +22,7 @@ from sklearn.metrics import (classification_report, confusion_matrix,
 import joblib
 
 # ── Paths ──────────────────────────────────────────────
-BASE_DIR   = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR   = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 MODELS_DIR = os.path.join(BASE_DIR, 'models')
 OUT_DIR    = os.path.join(BASE_DIR, 'outputs')
 os.makedirs(OUT_DIR, exist_ok=True)
