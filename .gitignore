@@ -14,6 +14,10 @@ build/
 
 # ── Credentials & Secrets ────────────────────────
 kaggle.json
+.env
+
+# ── Sample audio files ───────────────────────────
+src/audio_model/samples/
 
 # ── Model Weights (tracked via Git LFS) ──────────
 # models/*.pkl and src/visual_model/*.h5 are handled by LFS
