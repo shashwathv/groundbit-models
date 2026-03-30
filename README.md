@@ -33,48 +33,6 @@ groundbit/
 └── requirements.txt
 ```
 
-## Setup
-
-```bash
-# Clone
-git clone https://github.com/<your-username>/groundbit.git
-cd groundbit
-
-# Create virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
-> **Note:** Requires Python 3.11.9. CUDA 12 recommended for GPU acceleration.
-
-## Usage
-
-### Audio Model
-
-```bash
-# 1. Convert raw audio to 16kHz WAV
-python src/audio_model/preprocessing/convert_audio.py data/raw/
-
-# 2. Extract CNN14 embeddings from dataset
-python src/audio_model/preprocessing/extract_embeddings.py
-
-# 3. Train the classifier
-python src/audio_model/core/classifier.py
-
-# 4. Run inference on a file
-python src/audio_model/core/audio_cnn.py path/to/audio.wav
-```
-
-### Visual Model
-
-```bash
-# Run disease prediction on a leaf photo
-python src/visual_model/test_model.py
-```
-
 ## Tech Stack
 
 | Component | Libraries |
@@ -83,13 +41,3 @@ python src/visual_model/test_model.py
 | Audio classifier | scikit-learn (RF, LR, Gradient Boosting) |
 | Visual model | TensorFlow/Keras, EfficientNet |
 | Visualization | matplotlib, seaborn |
-
-## Model Files (Not in Git)
-
-Large files are excluded from the repository. Download or regenerate them:
-
-- `models/embeddings.pkl` — CNN14 embeddings (run `extract_embeddings.py`)
-- `models/pest_classifier.pkl` — Trained classifier (run `classifier.py`)
-- `models/scaler.pkl` — Feature scaler (run `classifier.py`)
-- `src/visual_model/best_model_final.h5` — EfficientNet weights
-- `src/visual_model/best_model_phase1.h5` — Phase 1 weights
