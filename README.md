@@ -13,19 +13,23 @@ Agricultural pest detection system combining **audio-based pest detection** and 
 groundbit/
 ├── src/
 │   ├── audio_model/
-│   │   ├── convert_audio.py         # Raw audio → 16kHz mono WAV
-│   │   ├── extract_embeddings.py    # CNN14 → 1024-dim embeddings
-│   │   ├── classifier.py           # Train & evaluate classifiers
-│   │   └── audio_cnn.py            # Inference entry point
+│   │   ├── core/
+│   │   │   ├── audio_cnn.py            # Inference entry point — detect()
+│   │   │   └── classifier.py           # Train & evaluate classifiers
+│   │   ├── preprocessing/
+│   │   │   ├── convert_audio.py        # Raw audio → 16kHz mono WAV
+│   │   │   └── extract_embeddings.py   # CNN14 → 1024-dim embeddings
+│   │   ├── samples/                    # Sample audio files
+│   │   └── api/                        # FastAPI prediction server
 │   └── visual_model/
-│       ├── test_model.py            # EfficientNet inference
-│       └── class_names.json         # 38 crop/disease labels
+│       ├── test_model.py               # EfficientNet inference
+│       └── class_names.json            # 38 crop/disease labels
 ├── data/
 │   └── datasets/
-│       ├── pest/                    # cricket, fruit_fly, stem_borer
-│       └── no_pest/                 # ambient, quiet_outdoor, rain, wind
-├── models/                          # Trained model artifacts (.pkl)
-├── outputs/                         # Spectrograms, confusion matrices
+│       ├── pest/                       # cricket, fruit_fly, stem_borer
+│       └── no_pest/                    # ambient, quiet_outdoor, rain, wind
+├── models/                             # Trained model artifacts (.pkl)
+├── outputs/                            # Spectrograms, confusion matrices
 └── requirements.txt
 ```
 
@@ -52,16 +56,16 @@ pip install -r requirements.txt
 
 ```bash
 # 1. Convert raw audio to 16kHz WAV
-python src/audio_model/convert_audio.py data/raw/
+python src/audio_model/preprocessing/convert_audio.py data/raw/
 
 # 2. Extract CNN14 embeddings from dataset
-python src/audio_model/extract_embeddings.py
+python src/audio_model/preprocessing/extract_embeddings.py
 
 # 3. Train the classifier
-python src/audio_model/classifier.py
+python src/audio_model/core/classifier.py
 
 # 4. Run inference on a file
-python src/audio_model/audio_cnn.py path/to/audio.wav
+python src/audio_model/core/audio_cnn.py path/to/audio.wav
 ```
 
 ### Visual Model
