@@ -13,13 +13,14 @@ import sys
 import numpy as np
 import librosa
 import matplotlib.pyplot as plt
+from pathlib import Path
 import joblib
 from panns_inference import AudioTagging
 
 # ── Paths ──────────────────────────────────────────────
-BASE_DIR   = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-MODELS_DIR = os.path.join(BASE_DIR, 'models')
-OUT_DIR    = os.path.join(BASE_DIR, 'outputs', 'spectrograms')
+BASE_DIR   = Path(__file__).resolve().parents[3]
+MODELS_DIR = BASE_DIR / 'models'
+OUT_DIR    = BASE_DIR / 'outputs' / 'spectrograms'
 os.makedirs(OUT_DIR, exist_ok=True)
 
 # ── Config ─────────────────────────────────────────────
@@ -61,7 +62,10 @@ def load_models():
         print("   Run these first:")
         print("     python src/extract_embeddings.py")
         print("     python src/train_classifier.py")
-        sys.exit(1)
+        raise FileNotFoundError(
+    f"Model files not found in {MODELS_DIR}. "
+    f"Run extract_embeddings.py and classifier.py first."
+)
 
     clf    = joblib.load(clf_path)
     scaler = joblib.load(scaler_path)
