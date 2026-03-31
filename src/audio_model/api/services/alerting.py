@@ -2,15 +2,18 @@ import os
 import httpx
 from datetime import datetime
 from dotenv import load_dotenv # type: ignore
+from pathlib import Path
 from ..models.schemas import DetectionEvent
 
-load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).resolve().parents[1] / '.env')
 
 ACCESS_TOKEN = os.getenv("WHATSAPP_TOKEN")
 PHONE_NUMBER_ID = os.getenv("WHATSAPP_PHONE_ID")
 API_VERSION = os.getenv("WHATSAPP_API_VERSION")
 VERIFY_TOKEN = os.getenv("WHATSAPP_VERIFY_TOKEN")
 RECIPIENT_NUMBER = os.getenv("RECIPIENT_PHONE_NUMBER")
+
+print(f"TOKEN LOADED: {ACCESS_TOKEN[:10] if ACCESS_TOKEN else 'NONE'}")
 
 URL = f"https://graph.facebook.com/{API_VERSION}/{PHONE_NUMBER_ID}/messages"
 
@@ -27,11 +30,14 @@ def send_alert(event: DetectionEvent) -> bool:
             return False
         
     message = (
-        f"Pest Detected on your farm! \n\n"
-        f"Confidence: {event.confidence:.2f}\n"
-        f"Time      : {event.timestamp.strftime('%H:%M:%S')}\n"
-        f"Action    : Check your crops immediately"
-    )
+    f"🚨 *PEST ALERT — Groundbit*\n\n"
+    f"A pest has been detected on your farm!\n\n"
+    f"📊 *Confidence :* {event.confidence:.2%}\n"
+    f"🕐 *Time       :* {event.timestamp.strftime('%d %b %Y, %H:%M:%S')}\n\n"
+    f"⚠️ *Action Required*\n"
+    f"Check your crops immediately and take necessary measures.\n\n"
+    f"_Sent by Groundbit Pest Detection System_"
+)
 
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",

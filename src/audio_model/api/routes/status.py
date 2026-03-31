@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Request
-from ..models.schemas import StatusResponse, HistroyRepsonse
+from ..models.schemas import StatusResponse, HistoryRepsonse
 
 router = APIRouter()
 
@@ -14,13 +14,13 @@ async def get_status(request: Request):
         latest=latest
     )
 
-@router.get("/history", response_model=HistroyRepsonse)
+@router.get("/history", response_model=HistoryRepsonse)
 def get_history(request: Request):
     store = request.app.state.store
 
     events, total = store.get_history()
 
-    return HistroyRepsonse(
+    return HistoryRepsonse(
         total=total,
         events=events
     )
