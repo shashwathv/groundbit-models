@@ -14,6 +14,6 @@ class StatusResponse(BaseModel):
     listening: bool
     latest: Optional[DetectionEvent] = None
 
-class HistroyRepsonse(BaseModel):
+class HistoryRepsonse(BaseModel):
     total: int
     events: list[DetectionEvent]
