@@ -3,7 +3,7 @@ from datetime import datetime
 from ..models.schemas import DetectionEvent
 from .alerting import send_alert
 from .result_store import ResultStore
-from audio_model.core.audio_cnn import detect
+from ...core.audio_cnn import detect
 
 async def run_inference(wav_path: str, store: ResultStore) -> None:
     if not wav_path.endswith('.wav'):

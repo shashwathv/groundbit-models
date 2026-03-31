@@ -16,7 +16,7 @@ class ResultStore:
             return None
         
     def get_history(self):
-        return len(self.events), list(self.events) 
+        return list(self.events), len(self.events)
         
     def set_listening(self, value:bool):
         self.listening = value
