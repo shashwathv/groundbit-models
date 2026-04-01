@@ -15,6 +15,7 @@ build/
 # ── Credentials & Secrets ────────────────────────
 kaggle.json
 .env
+.pem
 
 # ── Sample audio files ───────────────────────────
 src/audio_model/samples/
