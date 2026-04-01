@@ -41,3 +41,5 @@ outputs/
 # ── OS files ─────────────────────────────────────
 .DS_Store
 Thumbs.db
+
+src/audio_model/*.pem
