@@ -1,6 +1,6 @@
 import os
 import httpx
-from datetime import datetime
+from datetime import datetime, timezone
 from dotenv import load_dotenv # type: ignore
 from pathlib import Path
 from ..models.schemas import DetectionEvent
@@ -23,8 +23,10 @@ COOLDOWN_SECONDS = 600
 def send_alert(event: DetectionEvent) -> bool:
     global last_alert_time
 
+    now = datetime.now(timezone.utc)
+
     if last_alert_time != None:
-        elapsed = (datetime.now() - last_alert_time).seconds
+        elapsed = (datetime.now(timezone.utc) - last_alert_time).total_seconds()
         if elapsed < COOLDOWN_SECONDS:
             print(f"Cooldown active - {COOLDOWN_SECONDS - elapsed}s remaining...")
             return False
@@ -50,15 +52,19 @@ def send_alert(event: DetectionEvent) -> bool:
         "text": {"body": message}
     }
 
-    try: 
+    try:
         response = httpx.post(url=URL, json=payload, headers=headers, timeout=10)
+
+        print(f"Response status: {response.status_code}")
+        print(f"Response body: {response.text}")
+
         if response.status_code == 200:
-            last_alert_time = datetime.now()
-            print(f"Whatsapp message sent successfully...")
+            last_alert_time = now
+            print("Whatsapp message sent successfully...")
             return True
-        else:
-            print(f"Alert failed - status {response.status_code}: {response.text}")
-            return False
+
+        return False
+
     except Exception as e:
         print(f"Alert failed - {e}")
         return False
