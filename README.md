@@ -22,8 +22,14 @@ groundbit/
 │   │   ├── samples/                    # Sample audio files
 │   │   └── api/                        # FastAPI prediction server
 │   └── visual_model/
-│       ├── test_model.py               # EfficientNet inference
-│       └── class_names.json            # 38 crop/disease labels
+│       ├── api/                        # FastAPI prediction server
+│       │   ├── middleware/cors.py      # CORS config
+│       │   ├── models/schemas.py       # Pydantic response models
+│       │   ├── routes/                 # /predict, /health, /crops
+│       │   └── services/              # Inference pipeline & preprocessing
+│       ├── classes/                    # Per-crop disease label JSONs
+│       ├── weights/                   # EfficientNet .pth weights (LFS)
+│       └── test/test_model.py         # Smoke-test script
 ├── data/
 │   └── datasets/
 │       ├── pest/                       # cricket, fruit_fly, stem_borer
@@ -39,5 +45,5 @@ groundbit/
 |-----------|-----------|
 | Audio features | PyTorch, torchaudio, librosa, panns-inference |
 | Audio classifier | scikit-learn (RF, LR, Gradient Boosting) |
-| Visual model | TensorFlow/Keras, EfficientNet |
+| Visual model | PyTorch, torchvision, EfficientNet |
 | Visualization | matplotlib, seaborn |
