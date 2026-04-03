@@ -1,9 +1,10 @@
+# services/poller.py
+
 import asyncio
 from datetime import datetime, timezone
+from sqlalchemy import text
 
-from sqlalchemy import text  # ✅ REQUIRED for SQLAlchemy 2.0
-
-from .db import AudioSession, MainSession
+from .db import AudioSession, MainSession, DB_ENABLED
 from .s3 import download_wav
 from .worker import run_inference
 from .result_store import ResultStore
@@ -11,24 +12,28 @@ from .result_store import ResultStore
 
 async def start_poller(app) -> None:
     """
-    Entry point called from main.py lifespan.
-    Runs forever, polling every 5 seconds.
+    Runs forever as an asyncio background task.
+    Only active when DB is configured.
+    Polls audio_recordings for status='uploaded' every 5 seconds.
     """
-    print("Poller started — checking for unprocessed recordings every 5s")
+    if not DB_ENABLED:
+        print("Poller disabled — no DB configured")
+        return
+
+    print("Poller started — polling every 5 seconds")
     while True:
         try:
             await poll_once(app.state.store)
         except Exception as e:
-            print(f"Poller cycle error: {e}")
+            print(f"Poller cycle error: {repr(e)}")
         await asyncio.sleep(5)
 
 
 async def poll_once(store: ResultStore) -> None:
-    """
-    One polling cycle:
-    - fetch all rows with status = 'uploaded'
-    - process each one
-    """
+    """Single polling cycle — fetch and process all uploaded recordings."""
+    if not AudioSession:
+        return
+
     async with AudioSession() as audio_db:
         result = await audio_db.execute(
             text("""
@@ -39,18 +44,18 @@ async def poll_once(store: ResultStore) -> None:
                 LIMIT 10
             """)
         )
-        rows = result.mappings().all()  # ✅ safer for async
+        rows = result.fetchall()
 
     if not rows:
         return
 
-    print(f"Poller found {len(rows)} unprocessed recording(s)")
+    print(f"Poller: {len(rows)} unprocessed recording(s) found")
 
     for row in rows:
-        recording_id = str(row["id"])
-        session_id   = str(row["session_id"])
-        farmer_id    = str(row["farmer_id"])
-        s3_key       = row["s3_key"]
+        recording_id = str(row.id)
+        session_id   = str(row.session_id)
+        farmer_id    = str(row.farmer_id)
+        s3_key       = row.s3_key
 
         wav_path = None
         try:
@@ -69,16 +74,11 @@ async def poll_once(store: ResultStore) -> None:
                     )
 
         except Exception as e:
-            print(f"Failed to process recording {recording_id}: {e}")
-
+            print(f"Poller failed for recording {recording_id}: {e}")
             try:
                 async with AudioSession() as audio_db:
                     await audio_db.execute(
-                        text("""
-                            UPDATE audio_recordings
-                            SET status = 'failed'
-                            WHERE id = :id
-                        """),
+                        text("UPDATE audio_recordings SET status = 'failed' WHERE id = :id"),
                         {"id": recording_id}
                     )
                     await audio_db.commit()
