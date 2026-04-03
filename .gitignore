@@ -43,3 +43,4 @@ outputs/
 Thumbs.db
 
 src/audio_model/*.pem
+photos/*
